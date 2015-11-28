@@ -16,6 +16,7 @@ parseInput str = case parse (ssp int) str of
   [(ints, _)] -> ints
 
 data Op = Add | Sub | Mul | Div
+  deriving (Eq, Ord)
 
 instance Show Op where
   show Add = "+"
@@ -33,9 +34,11 @@ data Expr = Value Int | App Op Expr Expr
 
 instance Show Expr where
   show (Value x) = show x
-  show (App op l r) = (showsub l) ++ " " ++ show op ++ " " ++ (showsub r)
-    where showsub (Value x) = show x
-          showsub (App op el er) = "( " ++ show (App op el er) ++ " )"
+  show (App op l r) = (showsub op l) ++ " " ++ show op ++ " " ++ (showsub op r)
+    where showsub op (Value x) = show x
+          showsub op (App op2 el er) = if op > op2
+                                         then "( " ++ show (App op2 el er) ++ " )"
+                                         else show (App op2 el er)
 
 valid :: Op -> Int -> Int -> Bool
 valid Div x y = y /= 0 && (x `mod` y == 0)

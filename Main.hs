@@ -33,7 +33,9 @@ data Expr = Value Int | App Op Expr Expr
 
 instance Show Expr where
   show (Value x) = show x
-  show (App op l r) = "(" ++ show l ++ show op ++ show r ++ ")"
+  show (App op l r) = (showsub l) ++ " " ++ show op ++ " " ++ (showsub r)
+    where showsub (Value x) = show x
+          showsub (App op el er) = "( " ++ show (App op el er) ++ " )"
 
 valid :: Op -> Int -> Int -> Bool
 valid Div x y = y /= 0 && (x `mod` y == 0)

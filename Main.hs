@@ -1,3 +1,20 @@
+module Main where
+
+import Parser
+
+main = do
+  putStrLn "Please input four cards: "
+  ln <- getLine
+  let cards = parseInput ln
+  case search cards of
+    [] -> putStrLn "No solution found"
+    [x] -> putStrLn (show x)
+
+parseInput :: String -> [Int]
+parseInput str = case parse (ssp int) str of
+  [] -> []
+  [(ints, _)] -> ints
+
 data Op = Add | Sub | Mul | Div
 
 instance Show Op where
